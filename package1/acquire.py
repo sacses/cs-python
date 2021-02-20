@@ -17,7 +17,7 @@ def connection(db_file):
     return conn
 
 
-def top_n_acquirers(conn, n):
+def get_top_n_acquirers(conn, n):
     """
     Selects most successful acquirer channels
     :param conn: connection object
@@ -42,7 +42,7 @@ def top_n_acquirers(conn, n):
     return None
 
 
-def avg_submission_time(conn):
+def get_avg_submission_time(conn):
     """
     Selects and prints the average time a user takes to submit their tax
     declaration since they registered
@@ -76,7 +76,7 @@ def avg_submission_time(conn):
     return days
 
 
-def submission_time_user(conn):
+def get_submission_time_user(conn):
     """
     Provides list user, submission and registration dates, and difference
     :param conn: connection object
@@ -108,6 +108,23 @@ def submission_time_user(conn):
     return rows
 
 
+def get_raw_table(conn):
+    """
+    Selects number of registered users, submissions and their relation
+    by registration date
+    :param conn:connection object
+    :return: list of tuples
+    """
+    cur = conn.cursor()
+    cur.execute(
+        f"""SELECT * FROM taxfix"""
+    )
+
+    rows = cur.fetchall()
+
+    return rows
+
+
 def acquire_wrangle():
     """
 
@@ -118,16 +135,19 @@ def acquire_wrangle():
         "What is the most common channel for acquiring users? "
         "What is the second most common channel for acquiring users?"
     )
-    top_n_acquirers(conn, 2)
+    get_top_n_acquirers(conn, 2)
+
     print(
         ""
         "How much time does it usually take for a user from their registration"
         " to submit their tax declaration?"
     )
-    avg_time = avg_submission_time(conn)
-    user_timings = submission_time_user(conn)
+    avg_time = get_avg_submission_time(conn)
 
-    return avg_time, user_timings
+    user_timings = get_submission_time_user(conn)
+    raw_table = get_raw_table(conn)
+
+    return avg_time, user_timings, raw_table
 
 
 
