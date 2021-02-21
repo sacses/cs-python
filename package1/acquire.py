@@ -17,6 +17,30 @@ def connection(db_file):
     return conn
 
 
+def create_clean_sample(conn):
+    """
+    Creates table with clean records from the sample dataset
+    :param conn: connection object
+    :return:None
+    """
+    cur = conn.cursor()
+    cur.execute(
+        f"""Create TABLE IF NOT EXISTS cleaned_sample AS
+            SELECT
+            user_id,
+            datetime(substr(registration_date , 7, 4) || '-' || substr(registration_date , 4, 2) || '-' || substr(registration_date , 1, 2) || ' ' || substr(registration_date, 12, 2) || ':' || substr(registration_date, 15, 2) || ':' || substr(registration_date, 18, 2)) as registration_date,
+            REPLACE(REPLACE(app_version, '#N/A', 'unknown_version'), 'unknown', 'unknown_version') as app_version,
+            REPLACE(REPLACE(REPLACE(user_channel, '#N/A', 'unknown_channel'), 'n/a', 'unknown_channel'), 'unknown', 'unknown_channel') as user_channel,
+            datetime(substr(submission_date, 7, 4) || '-' || substr(submission_date, 4, 2) || '-' || substr(submission_date, 1, 2) || ' ' || substr(submission_date, 12, 2) || ':' || substr(submission_date, 15, 2) || ':' || substr(submission_date, 18, 2)) as submission_date,
+            REPLACE(REPLACE(user_platform, '#N/A', 'unknown_platform'), 'n/a', 'unknown_platform') as user_platform,
+            LOWER(REPLACE(REPLACE(City, '#N/A', 'unknown_city'), 'n/a', 'unknown_city')) as city,
+            LOWER(Country) as country
+            FROM taxfix"""
+    )
+
+    return None
+
+
 def get_top_n_acquirers(conn, n):
     """
     Selects most successful acquirer channels
@@ -28,7 +52,7 @@ def get_top_n_acquirers(conn, n):
     cur.execute(
         f"""SELECT user_channel AS channel,
         count(user_id) AS number_users
-        FROM taxfix
+        FROM cleaned_sample
         GROUP BY user_channel
         ORDER BY number_users DESC 
         LIMIT {n}"""
@@ -51,29 +75,23 @@ def get_avg_submission_time(conn):
     """
     cur = conn.cursor()
     cur.execute(
-        f"""with dates as 
-        (
-        select
-        user_id,
-        datetime(substr(submission_date, 7, 4) || '-' || substr(submission_date, 4, 2) || '-' || substr(submission_date, 1, 2) || ' ' || substr(submission_date, 12, 2) || ':' || substr(submission_date, 15, 2) || ':' || substr(submission_date, 18, 2)) as sub_date,
-        datetime(substr(registration_date , 7, 4) || '-' || substr(registration_date , 4, 2) || '-' || substr(registration_date , 1, 2) || ' ' || substr(registration_date, 12, 2) || ':' || substr(registration_date, 15, 2) || ':' || substr(registration_date, 18, 2)) as reg_date
-        from taxfix
-        where submission_date is not null
-        )
+        f"""
         select 
-        round(avg(STRFTIME('%s' ,sub_date) - STRFTIME('%s' ,reg_date)) / 60 / 24) as avg_time
-        from dates"""
+        round(avg(STRFTIME('%s' ,submission_date) - STRFTIME('%s' ,registration_date)) * 1.0 / 60 / 60) as avg_time
+        from cleaned_sample
+        where submission_date is not null
+        """
     )
 
     row = cur.fetchall()
-    days = int(row[0][0])
+    hours = row[0][0]
 
     print(
         f"Average time a user took to complete their tax submission "
-        f"since they've registered was {days} days"
+        f"since they've registered was {hours} hours"
     )
 
-    return days
+    return hours
 
 
 def get_submission_time_user(conn):
@@ -85,21 +103,13 @@ def get_submission_time_user(conn):
 
     cur = conn.cursor()
     cur.execute(
-        f"""with dates as 
-        (
-        select
-        user_id,
-        datetime(substr(submission_date, 7, 4) || '-' || substr(submission_date, 4, 2) || '-' || substr(submission_date, 1, 2) || ' ' || substr(submission_date, 12, 2) || ':' || substr(submission_date, 15, 2) || ':' || substr(submission_date, 18, 2)) as sub_date,
-        datetime(substr(registration_date , 7, 4) || '-' || substr(registration_date , 4, 2) || '-' || substr(registration_date , 1, 2) || ' ' || substr(registration_date, 12, 2) || ':' || substr(registration_date, 15, 2) || ':' || substr(registration_date, 18, 2)) as reg_date
-        from taxfix
-        where submission_date is not null
-        )
+        f"""
         select 
         user_id,
-        sub_date,
-        reg_date,
-        round((STRFTIME('%s' ,sub_date) - STRFTIME('%s' ,reg_date))*1.0 / 60 / 24) as difference
-        from dates
+        submission_date,
+        registration_date,
+        (STRFTIME('%s' ,submission_date) - STRFTIME('%s' ,registration_date)) *1.0 / 60 / 60 as difference
+        from cleaned_sample
         order by difference DESC"""
     )
 
@@ -117,7 +127,7 @@ def get_raw_table(conn):
     """
     cur = conn.cursor()
     cur.execute(
-        f"""SELECT * FROM taxfix"""
+        f"""SELECT * FROM cleaned_sample"""
     )
 
     rows = cur.fetchall()
@@ -131,6 +141,7 @@ def acquire_wrangle():
     :return:
     """
     conn = connection('data/input/chinook.db')
+    create_clean_sample(conn)
     print(
         "What is the most common channel for acquiring users? "
         "What is the second most common channel for acquiring users?"
