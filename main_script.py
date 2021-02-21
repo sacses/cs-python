@@ -6,7 +6,7 @@ from package1.load import load
 
 def main():
 
-    avg_time, user_timings, conversion_rates = acquire_wrangle()
+    avg_time, user_timings, raw_table = acquire_wrangle()
     load(avg_time, user_timings)
 
 
