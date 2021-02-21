@@ -70,7 +70,7 @@ def get_avg_submission_time(conn):
 
     print(
         f"Average time a user took to complete their tax submission "
-        f"since being registered was {days} days"
+        f"since they've registered was {days} days"
     )
 
     return days
@@ -98,7 +98,7 @@ def get_submission_time_user(conn):
         user_id,
         sub_date,
         reg_date,
-        STRFTIME('%s' ,sub_date) - STRFTIME('%s' ,reg_date)  as difference
+        round((STRFTIME('%s' ,sub_date) - STRFTIME('%s' ,reg_date))*1.0 / 60 / 24) as difference
         from dates
         order by difference DESC"""
     )
