@@ -1,0 +1,49 @@
+backcall @ file:///home/ktietz/src/ci/backcall_1611930011877/work
+certifi==2020.12.5
+cmdstanpy==0.9.5
+convertdate==2.3.1
+cycler==0.10.0
+Cython==0.29.22
+decorator @ file:///home/ktietz/src/ci/decorator_1611930055503/work
+ephem==3.7.7.1
+fbprophet==0.7.1
+hijri-converter==2.1.1
+holidays==0.10.5.2
+ipykernel @ file:///tmp/build/80754af9/ipykernel_1596206598566/work/dist/ipykernel-5.3.4-py3-none-any.whl
+ipython @ file:///tmp/build/80754af9/ipython_1612212922137/work
+ipython-genutils @ file:///tmp/build/80754af9/ipython_genutils_1606773439826/work
+jedi==0.17.0
+jupyter-client @ file:///tmp/build/80754af9/jupyter_client_1601311786391/work
+jupyter-core @ file:///tmp/build/80754af9/jupyter_core_1612213308260/work
+kiwisolver @ file:///tmp/build/80754af9/kiwisolver_1612282414123/work
+korean-lunar-calendar==0.2.1
+LunarCalendar==0.0.9
+matplotlib @ file:///tmp/build/80754af9/matplotlib-suite_1613407855456/work
+mkl-fft==1.2.1
+mkl-random==1.1.1
+mkl-service==2.3.0
+numpy @ file:///tmp/build/80754af9/numpy_and_numpy_base_1603479632437/work
+olefile==0.46
+pandas==1.2.2
+parso @ file:///tmp/build/80754af9/parso_1607623074025/work
+pexpect @ file:///tmp/build/80754af9/pexpect_1605563209008/work
+pickleshare @ file:///tmp/build/80754af9/pickleshare_1606932040724/work
+Pillow @ file:///tmp/build/80754af9/pillow_1609786740831/work
+prompt-toolkit @ file:///tmp/build/80754af9/prompt-toolkit_1602688806899/work
+ptyprocess @ file:///tmp/build/80754af9/ptyprocess_1609355006118/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
+Pygments @ file:///tmp/build/80754af9/pygments_1610565767015/work
+PyMeeus==0.3.13
+pyparsing @ file:///home/linux1/recipes/ci/pyparsing_1610983426697/work
+pystan==2.19.1.1
+python-dateutil @ file:///home/ktietz/src/ci/python-dateutil_1611928101742/work
+pytz @ file:///tmp/build/80754af9/pytz_1612215392582/work
+pyzmq==20.0.0
+scipy @ file:///tmp/build/80754af9/scipy_1612469579197/work
+seaborn @ file:///tmp/build/80754af9/seaborn_1608578541026/work
+setuptools-git==1.2
+six @ file:///tmp/build/80754af9/six_1605205313296/work
+SQLAlchemy @ file:///tmp/build/80754af9/sqlalchemy_1612467559264/work
+tornado @ file:///tmp/build/80754af9/tornado_1606942283357/work
+tqdm==4.57.0
+traitlets @ file:///home/ktietz/src/ci/traitlets_1611929699868/work
+wcwidth @ file:///tmp/build/80754af9/wcwidth_1593447189090/work
